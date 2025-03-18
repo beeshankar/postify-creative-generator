@@ -31,7 +31,7 @@ const SocialPostGenerator = () => {
     setIsGenerating(true);
 
     try {
-      const response = await fetch('https://free.churchless.tech/v1/chat/completions', {
+      const response = await fetch('https://api.openai-proxy.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const SocialPostGenerator = () => {
       setShowPreview(true);
       toast.success('Content generated successfully!');
     } catch (error) {
-      toast.error('Failed to generate content. Please try again later.');
+      toast.error('Failed to generate content. Please try again in a few moments.');
       console.error('Error:', error);
     } finally {
       setIsGenerating(false);
