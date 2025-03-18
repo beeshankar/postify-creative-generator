@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Twitter, Linkedin, Facebook, Instagram, Loader2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
 const MAX_CHARS = 280;
@@ -12,7 +11,6 @@ const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1488590528505-98d2b
 
 const SocialPostGenerator = () => {
   const [text, setText] = useState('');
-  const [apiKey, setApiKey] = useState('');
   const [generatedPost, setGeneratedPost] = useState('');
   const [editablePost, setEditablePost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -30,22 +28,16 @@ const SocialPostGenerator = () => {
       return;
     }
 
-    if (!apiKey) {
-      toast.error('Please enter your Perplexity API key');
-      return;
-    }
-
     setIsGenerating(true);
 
     try {
-      const response = await fetch('https://api.perplexity.ai/chat/completions', {
+      const response = await fetch('https://free.churchless.tech/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'llama-3.1-sonar-small-128k-online',
+          model: 'gpt-3.5-turbo',
           messages: [
             {
               role: 'system',
@@ -72,7 +64,7 @@ const SocialPostGenerator = () => {
       setShowPreview(true);
       toast.success('Content generated successfully!');
     } catch (error) {
-      toast.error('Failed to generate content. Please check your API key and try again.');
+      toast.error('Failed to generate content. Please try again later.');
       console.error('Error:', error);
     } finally {
       setIsGenerating(false);
@@ -88,25 +80,13 @@ const SocialPostGenerator = () => {
     twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(generatedPost)}`,
     linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(generatedPost)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`,
-    instagram: `#` // Note: Instagram doesn't support direct sharing via URL
+    instagram: '#' // Note: Instagram doesn't support direct sharing via URL
   };
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <Card className="p-6 backdrop-blur-sm bg-white/80 shadow-lg border border-gray-100">
         <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Perplexity API Key (temporary)
-            </label>
-            <Input
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Enter your Perplexity API key"
-              className="w-full"
-            />
-          </div>
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               What's on your mind?
